@@ -5,6 +5,7 @@ import { destination } from "./destination";
 import { testimonial } from "./testimonial";
 import { service } from "./service";
 import { siteSettings } from "./siteSettings";
+import { lead } from "./lead";
 import { faq, itineraryDay, labelValue, attraction } from "./objects";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
@@ -15,6 +16,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     testimonial,
     service,
     siteSettings,
+    lead,
     // Reusable object types
     faq,
     itineraryDay,
