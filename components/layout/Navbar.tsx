@@ -3,41 +3,41 @@
 import { useEffect, useState } from "react";
 import Icon from "@/components/ui/Icon";
 
-type DropItem = { icon: string; title: string; sub: string };
+type DropItem = { icon: string; title: string; sub: string; href: string };
 
 const fleetItems: DropItem[] = [
-  { icon: "car", title: "Toyota Innova Crysta", sub: "6–7 Seats · Premium SUV" },
-  { icon: "bus", title: "Force Tempo Traveller", sub: "12–17 Seats · Group Travel" },
-  { icon: "car", title: "Maruti Swift Dzire", sub: "4 Seats · Budget Sedan" },
-  { icon: "car", title: "Honda Amaze", sub: "4 Seats · Highway Sedan" },
-  { icon: "car", title: "Maruti Ertiga", sub: "6–7 Seats · Family MUV" },
-  { icon: "bus", title: "Buses & Coaches", sub: "20+ Seats · Custom Hire" },
+  { icon: "car", title: "Toyota Innova Crysta", sub: "6–7 Seats · Premium SUV", href: "/fleet/toyota-innova-crysta" },
+  { icon: "bus", title: "Force Tempo Traveller", sub: "12–17 Seats · Group Travel", href: "/fleet/force-tempo-traveller" },
+  { icon: "car", title: "Maruti Swift Dzire", sub: "4 Seats · Budget Sedan", href: "/fleet/maruti-swift-dzire" },
+  { icon: "car", title: "Honda Amaze", sub: "4 Seats · Highway Sedan", href: "/fleet/honda-amaze" },
+  { icon: "car", title: "Maruti Ertiga", sub: "6–7 Seats · Family MUV", href: "/fleet/maruti-suzuki-ertiga" },
+  { icon: "bus", title: "Buses & Coaches", sub: "20+ Seats · Custom Hire", href: "/fleet" },
 ];
 
 const destHills: DropItem[] = [
-  { icon: "mountain", title: "Himachal Pradesh", sub: "Manali · Spiti · Dharamshala" },
-  { icon: "mountain", title: "Kashmir", sub: "Dal Lake · Gulmarg · Pahalgam" },
-  { icon: "mountain", title: "Uttarakhand", sub: "Rishikesh · Haridwar · Kedarnath" },
-  { icon: "mappin", title: "Rajasthan", sub: "Jaipur · Udaipur · Jodhpur" },
+  { icon: "mountain", title: "Himachal Pradesh", sub: "Manali · Spiti · Dharamshala", href: "/destinations/himachal-pradesh" },
+  { icon: "mountain", title: "Kashmir", sub: "Dal Lake · Gulmarg · Pahalgam", href: "/destinations/kashmir" },
+  { icon: "mountain", title: "Uttarakhand", sub: "Rishikesh · Haridwar · Kedarnath", href: "/destinations/uttarakhand" },
+  { icon: "mappin", title: "Rajasthan", sub: "Jaipur · Udaipur · Jodhpur", href: "/destinations/rajasthan" },
 ];
 const destCoast: DropItem[] = [
-  { icon: "mappin", title: "Kerala", sub: "Munnar · Alleppey · Wayanad" },
-  { icon: "mappin", title: "Goa", sub: "North Goa · South Goa" },
-  { icon: "mappin", title: "Mumbai", sub: "City Tours · Airport Transfers" },
-  { icon: "mappin", title: "Gujarat", sub: "Rann of Kutch · Somnath · Dwarka" },
+  { icon: "mappin", title: "Kerala", sub: "Munnar · Alleppey · Wayanad", href: "/destinations/kerala" },
+  { icon: "mappin", title: "Goa", sub: "North Goa · South Goa", href: "/destinations/goa" },
+  { icon: "mappin", title: "Mumbai", sub: "City Tours · Airport Transfers", href: "/destinations/mumbai" },
+  { icon: "mappin", title: "Gujarat", sub: "Rann of Kutch · Somnath · Dwarka", href: "/destinations/gujarat" },
 ];
 
 const serviceItems: DropItem[] = [
-  { icon: "road", title: "Outstation Tours", sub: "Multi-day journeys across India" },
-  { icon: "nav", title: "Airport Transfers", sub: "On-time pickup & drop" },
-  { icon: "briefcase", title: "Corporate Travel", sub: "Employee & executive transport" },
-  { icon: "users", title: "Group Tours", sub: "Family & friends · 12+ pax" },
-  { icon: "sparkle", title: "Wedding Transport", sub: "Decorated cars & fleets" },
+  { icon: "road", title: "Outstation Tours", sub: "Multi-day journeys across India", href: "/services" },
+  { icon: "nav", title: "Airport Transfers", sub: "On-time pickup & drop", href: "/services" },
+  { icon: "briefcase", title: "Corporate Travel", sub: "Employee & executive transport", href: "/services" },
+  { icon: "users", title: "Group Tours", sub: "Family & friends · 12+ pax", href: "/services" },
+  { icon: "sparkle", title: "Wedding Transport", sub: "Decorated cars & fleets", href: "/services" },
 ];
 
-function DropdownItem({ item, href }: { item: DropItem; href: string }) {
+function DropdownItem({ item, href }: { item: DropItem; href?: string }) {
   return (
-    <a href={href} className="dropdown-item">
+    <a href={href ?? item.href} className="dropdown-item">
       <div className="di-icon">
         <Icon name={item.icon} />
       </div>
@@ -133,7 +133,7 @@ export default function Navbar() {
             </a>
             <div className="dropdown">
               {fleetItems.map((it) => (
-                <DropdownItem key={it.title} item={it} href="/fleet" />
+                <DropdownItem key={it.title} item={it} />
               ))}
               <a href="/fleet" className="dropdown-footer">
                 <div className="dropdown-footer-text">
@@ -153,13 +153,13 @@ export default function Navbar() {
               <div className="mega-grid">
                 <div className="mega-label">Hill Stations &amp; Pilgrimage</div>
                 {destHills.map((it) => (
-                  <DropdownItem key={it.title} item={it} href="/destinations" />
+                  <DropdownItem key={it.title} item={it} />
                 ))}
                 <div className="mega-label" style={{ marginTop: ".4rem" }}>
                   Beaches, Heritage &amp; City
                 </div>
                 {destCoast.map((it) => (
-                  <DropdownItem key={it.title} item={it} href="/destinations" />
+                  <DropdownItem key={it.title} item={it} />
                 ))}
               </div>
               <a href="/destinations" className="dropdown-footer">
@@ -178,7 +178,7 @@ export default function Navbar() {
             </a>
             <div className="dropdown">
               {serviceItems.map((it) => (
-                <DropdownItem key={it.title} item={it} href="/services" />
+                <DropdownItem key={it.title} item={it} />
               ))}
               <a href="/contact" className="dropdown-footer">
                 <div className="dropdown-footer-text">
@@ -191,8 +191,8 @@ export default function Navbar() {
           </li>
 
           <li>
-            <a href="/destinations#packages" onClick={closeMobile}>
-              Packages
+            <a href="/tours" onClick={closeMobile}>
+              Tours
             </a>
           </li>
           <li>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
 import { destinations, type Destination } from "@/lib/data";
@@ -34,6 +35,13 @@ export default function Destinations({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={d.image} alt={d.name} loading="lazy" />
+              {d.slug && (
+                <Link
+                  href={`/destinations/${d.slug}`}
+                  className="dest-card-anchor"
+                  aria-label={`Explore ${d.name}`}
+                />
+              )}
               <div className="dest-overlay">
                 <h3>{d.name}</h3>
                 <span>

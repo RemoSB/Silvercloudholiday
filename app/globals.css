@@ -191,3 +191,643 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DETAIL PAGES (destination / tour / vehicle)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Image hero ──────────────────────────────────────────── */
+.detail-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: flex-end;
+  padding: 9rem 0 3.25rem;
+  overflow: hidden;
+  color: #fff;
+}
+.detail-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 27, 42, 0.35) 0%,
+    rgba(13, 27, 42, 0.55) 55%,
+    rgba(13, 27, 42, 0.9) 100%
+  );
+}
+.detail-hero-inner {
+  position: relative;
+  z-index: 2;
+}
+.detail-hero .crumbs {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+}
+.detail-hero .crumbs a {
+  color: rgba(255, 255, 255, 0.85);
+}
+.detail-hero .crumbs a:hover {
+  color: var(--gold);
+}
+.detail-hero h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height: 1.12;
+  margin: 0.35rem 0 0.6rem;
+  max-width: 16ch;
+}
+.detail-hero-tagline {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 52ch;
+  line-height: 1.55;
+}
+.detail-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+.detail-hero-meta span {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  padding: 0.4rem 0.9rem;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* ── Overview + sticky sidebar layout ────────────────────── */
+.detail-body {
+  padding: 4.5rem 0;
+}
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: start;
+}
+.detail-main h2 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: clamp(1.6rem, 2.6vw, 2rem);
+  margin-bottom: 1rem;
+}
+.detail-lead p {
+  color: var(--ink, #2a3142);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.why-visit {
+  list-style: none;
+  padding: 0;
+  margin: 1.75rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.why-visit li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  color: var(--ink, #2a3142);
+  line-height: 1.5;
+}
+.why-visit .icon {
+  color: var(--gold2, #c09c25);
+  margin-top: 0.15rem;
+}
+.detail-aside {
+  position: sticky;
+  top: 100px;
+  display: grid;
+  gap: 1.25rem;
+}
+
+/* ── Fast facts / snapshot card ──────────────────────────── */
+.fast-facts {
+  background: #fff;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card, 0 8px 32px rgba(13, 27, 42, 0.1));
+  padding: 1.5rem 1.4rem;
+}
+.fast-facts h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+}
+.fast-facts h3 .icon {
+  color: var(--gold2, #c09c25);
+}
+.fast-facts dl {
+  margin: 0;
+}
+.fact-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed rgba(13, 27, 42, 0.1);
+}
+.fact-row:last-child {
+  border-bottom: none;
+}
+.fact-row dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.fact-row dd {
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+/* Price / booking sidebar card */
+.price-card {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 16px;
+  padding: 1.6rem 1.5rem;
+  box-shadow: var(--shadow-card, 0 8px 32px rgba(13, 27, 42, 0.1));
+}
+.price-card .price-amt {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.price-card .price-note {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  margin: 0.4rem 0 1.2rem;
+}
+.price-card .price-actions {
+  display: grid;
+  gap: 0.6rem;
+}
+.price-card .btn-whatsapp,
+.price-card .btn-primary {
+  justify-content: center;
+  width: 100%;
+}
+.price-card .price-reassure {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.45rem;
+}
+.price-card .price-reassure span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+.price-card .price-reassure .icon {
+  color: var(--gold);
+}
+
+/* ── Attractions grid ────────────────────────────────────── */
+.attractions-section {
+  padding: 5rem 0;
+  background: var(--bg, #f8f9fa);
+}
+.attractions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.attraction-card {
+  background: #fff;
+  border: 1px solid rgba(13, 27, 42, 0.06);
+  border-radius: 16px;
+  padding: 1.6rem 1.5rem;
+  box-shadow: 0 8px 24px rgba(13, 27, 42, 0.06);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.attraction-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(13, 27, 42, 0.12);
+}
+.attraction-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold2, #c09c25);
+  margin-bottom: 1rem;
+}
+.attraction-card h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+.attraction-card p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ── Itinerary timeline ──────────────────────────────────── */
+.itinerary-section {
+  padding: 5rem 0;
+}
+.itinerary {
+  list-style: none;
+  padding: 0;
+  margin: 3rem auto 0;
+  max-width: 820px;
+  position: relative;
+}
+.itinerary::before {
+  content: "";
+  position: absolute;
+  left: 27px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(var(--gold), rgba(212, 175, 55, 0.2));
+}
+.itin-day {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 1.4rem;
+  padding-bottom: 1.6rem;
+  position: relative;
+}
+.itin-marker {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  border: 3px solid var(--gold);
+  line-height: 1;
+}
+.itin-marker span {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+.itin-marker strong {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  color: var(--gold);
+}
+.itin-body {
+  background: #fff;
+  border: 1px solid rgba(13, 27, 42, 0.07);
+  border-radius: 14px;
+  padding: 1.1rem 1.35rem;
+  box-shadow: 0 6px 20px rgba(13, 27, 42, 0.05);
+}
+.itin-body h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+.itin-body p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+/* ── Highlights chips ────────────────────────────────────── */
+.tour-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.tour-highlights li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(27, 108, 168, 0.08);
+  color: var(--navy);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.5rem 0.9rem;
+  border-radius: 30px;
+}
+.tour-highlights .icon {
+  color: var(--ocean);
+}
+
+/* ── Inclusions / exclusions ─────────────────────────────── */
+.inc-exc-section {
+  padding: 5rem 0;
+  background: var(--bg, #f8f9fa);
+}
+.inc-exc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.inc-card,
+.exc-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.75rem;
+  border: 1px solid rgba(13, 27, 42, 0.07);
+  box-shadow: 0 8px 24px rgba(13, 27, 42, 0.05);
+}
+.inc-card h3,
+.exc-card h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.2rem;
+  margin-bottom: 1.1rem;
+}
+.inc-card ul,
+.exc-card ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.inc-card li,
+.exc-card li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  color: var(--ink, #2a3142);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.inc-card .icon {
+  color: #1a9e5f;
+  margin-top: 0.1rem;
+}
+.exc-mark {
+  color: #d0463b;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ── Recommended vehicles ────────────────────────────────── */
+.rec-vehicles {
+  padding: 5rem 0;
+}
+.rec-vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.rec-vehicle-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(13, 27, 42, 0.07);
+  box-shadow: 0 10px 28px rgba(13, 27, 42, 0.07);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.rec-vehicle-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(13, 27, 42, 0.13);
+}
+.rec-vehicle-img {
+  display: block;
+  height: 170px;
+  overflow: hidden;
+}
+.rec-vehicle-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.rec-vehicle-card:hover .rec-vehicle-img img {
+  transform: scale(1.07);
+}
+.rec-vehicle-body {
+  padding: 1.2rem 1.35rem 1.4rem;
+}
+.rec-vehicle-body h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.15rem;
+  margin-bottom: 0.7rem;
+}
+.rec-vehicle-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.rec-vehicle-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.rec-vehicle-meta .icon {
+  color: var(--ocean);
+}
+.rec-vehicle-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rec-vehicle-foot strong {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.15rem;
+}
+
+/* ── FAQ accordion ───────────────────────────────────────── */
+.faq-section {
+  padding: 5rem 0;
+  background: var(--bg, #f8f9fa);
+}
+.faq-list {
+  max-width: 800px;
+  margin: 3rem auto 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.faq-item {
+  background: #fff;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease;
+}
+.faq-item.open {
+  box-shadow: 0 10px 28px rgba(13, 27, 42, 0.08);
+}
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1.15rem 1.35rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--navy);
+}
+.faq-q .icon {
+  color: var(--ocean);
+  transition: transform 0.3s ease;
+  flex: none;
+}
+.faq-item.open .faq-q .icon {
+  transform: rotate(180deg);
+}
+.faq-a {
+  padding: 0 1.35rem 1.25rem;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 0.92rem;
+}
+
+/* ── Enquiry CTA (destination/tour/vehicle footer form) ──── */
+.enquire-cta {
+  padding: 5rem 0;
+  background: linear-gradient(120deg, #0d1b2a 0%, #1a3a5c 100%);
+  color: #fff;
+}
+.enquire-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 3rem;
+  align-items: center;
+}
+.enquire-copy h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin: 0.35rem 0 1rem;
+}
+.enquire-copy > p {
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.75;
+  max-width: 48ch;
+}
+.enquire-trust {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 0.7rem;
+}
+.enquire-trust li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.92rem;
+}
+.enquire-trust .icon {
+  color: var(--gold);
+}
+.enquire-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.enquire-form .booking-card {
+  margin: 0;
+  width: 100%;
+}
+
+/* ── Related-tours reuse of pkg grid ─────────────────────── */
+.related-tours {
+  padding: 5rem 0;
+}
+.pkg-media {
+  display: block;
+}
+
+/* Make destination cards clickable */
+.dest-card {
+  position: relative;
+}
+.dest-card-anchor {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-aside {
+    position: static;
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+  }
+  .enquire-grid {
+    grid-template-columns: 1fr;
+  }
+  .attractions-grid,
+  .rec-vehicle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .inc-exc-grid {
+    grid-template-columns: 1fr;
+  }
+  .detail-aside {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .attractions-grid,
+  .rec-vehicle-grid {
+    grid-template-columns: 1fr;
+  }
+  .itin-day {
+    grid-template-columns: 48px 1fr;
+    gap: 1rem;
+  }
+  .itinerary::before {
+    left: 23px;
+  }
+  .itin-marker {
+    width: 48px;
+    height: 48px;
+  }
+  .detail-hero {
+    min-height: 52vh;
+  }
+}

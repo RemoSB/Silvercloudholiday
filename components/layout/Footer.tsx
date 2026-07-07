@@ -9,12 +9,13 @@ const services = [
   "Wedding Transport",
 ];
 
-const destinations = [
-  "Himachal Pradesh",
-  "Kashmir",
-  "Uttarakhand",
-  "Rajasthan",
-  "Kerala · Goa",
+const destinations: { label: string; href: string }[] = [
+  { label: "Himachal Pradesh", href: "/destinations/himachal-pradesh" },
+  { label: "Kashmir", href: "/destinations/kashmir" },
+  { label: "Uttarakhand", href: "/destinations/uttarakhand" },
+  { label: "Rajasthan", href: "/destinations/rajasthan" },
+  { label: "Kerala", href: "/destinations/kerala" },
+  { label: "All Tour Packages", href: "/tours" },
 ];
 
 export default function Footer() {
@@ -64,9 +65,9 @@ export default function Footer() {
             <h4>Destinations</h4>
             <ul>
               {destinations.map((d) => (
-                <li key={d}>
-                  <a href="/#destinations">
-                    <Icon name="mappin" /> {d}
+                <li key={d.label}>
+                  <a href={d.href}>
+                    <Icon name="mappin" /> {d.label}
                   </a>
                 </li>
               ))}

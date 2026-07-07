@@ -27,7 +27,7 @@ const img = (source: SanityImg, fallback: string): string => {
 export async function getFleet(): Promise<Vehicle[]> {
   if (!isSanityConfigured) return fleetFallback;
   const rows = await client.fetch<Record<string, unknown>[]>(
-    `*[_type == "vehicle"] | order(order asc){ name, image, badge, meta, tags, price }`,
+    `*[_type == "vehicle"] | order(order asc){ name, "slug": slug.current, category, image, badge, meta, tags, price }`,
     {},
     OPTS
   );
@@ -35,6 +35,8 @@ export async function getFleet(): Promise<Vehicle[]> {
   return rows.map((r) => ({
     name: r.name as string,
     alt: r.name as string,
+    slug: r.slug as string | undefined,
+    category: r.category as Vehicle["category"],
     image: img(r.image as SanityImg, "/images/Toyota Innova Crysta.png"),
     badge: r.badge as Vehicle["badge"],
     meta: (r.meta as Vehicle["meta"]) || [],
@@ -46,13 +48,14 @@ export async function getFleet(): Promise<Vehicle[]> {
 export async function getDestinations(): Promise<Destination[]> {
   if (!isSanityConfigured) return destFallback;
   const rows = await client.fetch<Record<string, unknown>[]>(
-    `*[_type == "destination"] | order(order asc){ name, image, sub, pill, wide }`,
+    `*[_type == "destination"] | order(order asc){ name, "slug": slug.current, image, sub, pill, wide }`,
     {},
     OPTS
   );
   if (!rows?.length) return destFallback;
   return rows.map((r) => ({
     name: r.name as string,
+    slug: r.slug as string | undefined,
     image: img(r.image as SanityImg, "/images/India_outline.png"),
     sub: (r.sub as string) || "",
     pill: r.pill as Destination["pill"],
@@ -63,18 +66,20 @@ export async function getDestinations(): Promise<Destination[]> {
 export async function getPackages(): Promise<Package[]> {
   if (!isSanityConfigured) return pkgFallback;
   const rows = await client.fetch<Record<string, unknown>[]>(
-    `*[_type == "tourPackage"] | order(order asc){ name, image, tag, route, feats, price }`,
+    `*[_type == "tourPackage"] | order(order asc){ name, "slug": slug.current, image, tag, route, feats, price, duration }`,
     {},
     OPTS
   );
   if (!rows?.length) return pkgFallback;
   return rows.map((r) => ({
     name: r.name as string,
+    slug: r.slug as string | undefined,
     image: img(r.image as SanityImg, "/images/pkg-manali.jpg"),
     tag: (r.tag as string) || "",
     route: (r.route as string) || "",
     feats: (r.feats as string[]) || [],
     price: (r.price as string) || "",
+    duration: r.duration as string | undefined,
   }));
 }
 

@@ -28,7 +28,7 @@ export default async function Home() {
       <USP />
       <Fleet items={fleet} />
       <Destinations items={destinations} />
-      <Packages items={packages} />
+      <Packages items={packages.slice(0, 8)} />
       <WhyUs />
       <About />
       <Testimonials items={testimonials} />

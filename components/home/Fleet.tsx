@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
 import { fleet, type Vehicle } from "@/lib/data";
@@ -59,10 +60,17 @@ export default function Fleet({
                     <span>Starting from</span>
                     <strong>{v.price}</strong>
                   </div>
-                  <a className="btn-book" href="#cta">
-                    Book Now
-                    <Icon name="arrow" sm />
-                  </a>
+                  {v.slug ? (
+                    <Link className="btn-book" href={`/fleet/${v.slug}`}>
+                      View Details
+                      <Icon name="arrow" sm />
+                    </Link>
+                  ) : (
+                    <a className="btn-book" href="#cta">
+                      Book Now
+                      <Icon name="arrow" sm />
+                    </a>
+                  )}
                 </div>
               </div>
             </Reveal>
