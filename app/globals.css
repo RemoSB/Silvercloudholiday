@@ -1,26 +1,193 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Brand tokens exposed to Tailwind v4 utilities (bg-navy, text-gold, etc.) */
+@theme {
+  --color-navy: #0d1b2a;
+  --color-navy2: #1a3a5c;
+  --color-ocean: #1b6ca8;
+  --color-gold: #d4af37;
+  --color-gold2: #c09c25;
+  --color-bg: #f8f9fa;
+  --color-ink: #2a3142;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
+
+  --font-heading: var(--font-playfair), "Playfair Display", serif;
+  --font-body: var(--font-poppins), "Poppins", sans-serif;
+
+  --radius-card: 14px;
+  --shadow-card: 0 8px 32px rgba(13, 27, 42, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Inner-page hero band (clears the fixed navbar) ──────── */
+.page-hero {
+  position: relative;
+  padding: 9rem 0 3.5rem;
+  background: linear-gradient(120deg, #0d1b2a 0%, #1a3a5c 100%);
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+.page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/images/India_outline.webp") center/60% no-repeat;
+  opacity: 0.06;
+}
+.page-hero .container {
+  position: relative;
+  z-index: 1;
+}
+.page-hero .section-label {
+  color: var(--gold);
+}
+.page-hero h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0.5rem 0 0.75rem;
+}
+.page-hero p {
+  max-width: 640px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.7);
+}
+.page-hero .crumbs {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+.page-hero .crumbs a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+}
+.page-hero .crumbs a:hover {
+  color: var(--gold);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Services grid ───────────────────────────────────────── */
+.services-section {
+  padding: 5rem 0;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.service-card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease;
+}
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 44px rgba(13, 27, 42, 0.16);
+}
+.service-card .svc-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(27, 108, 168, 0.1);
+  color: var(--ocean);
+  margin-bottom: 1.1rem;
+}
+.service-card .svc-icon .icon {
+  width: 26px;
+  height: 26px;
+}
+.service-card h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+.service-card p {
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+@media (max-width: 900px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .services-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Contact page ────────────────────────────────────────── */
+.contact-section {
+  padding: 5rem 0;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+.contact-info h2 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 1.9rem;
+  margin-bottom: 1rem;
+}
+.contact-info > p {
+  color: var(--muted);
+  margin-bottom: 1.75rem;
+  line-height: 1.65;
+}
+.contact-list {
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+.contact-list li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+.contact-list .ci-icon {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(212, 175, 55, 0.14);
+  color: var(--gold2);
+}
+.contact-list .ci-icon .icon {
+  width: 20px;
+  height: 20px;
+}
+.contact-list strong {
+  display: block;
+  color: var(--navy);
+  font-size: 0.95rem;
+}
+.contact-list a,
+.contact-list span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+.contact-list a:hover {
+  color: var(--ocean);
+}
+.contact-form-wrap .booking-card {
+  margin: 0;
+  width: 100%;
+}
+@media (max-width: 860px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
 }
