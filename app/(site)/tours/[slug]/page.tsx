@@ -12,16 +12,19 @@ import JsonLd from "@/components/ui/JsonLd";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
 import {
-  tours as allTours,
-  getTour,
-  getDestination,
-  getVehicle,
-  toursForDestination,
-} from "@/lib/data";
+  getTourBySlug,
+  getDestinationBySlug,
+  getVehicleBySlug,
+  getToursForDestination,
+  getTourSlugs,
+} from "@/sanity/queries";
 import { SITE_URL, COMPANY, waLink } from "@/lib/site";
 
-export function generateStaticParams() {
-  return allTours.map((t) => ({ slug: t.slug! }));
+export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return (await getTourSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -30,7 +33,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const t = getTour(slug);
+  const t = await getTourBySlug(slug);
   if (!t) return { title: "Tour Not Found" };
   const desc = `${t.name} — ${t.duration}, ${t.route}. Chauffeur-driven ${COMPANY} package from ${t.price}. Day-wise itinerary, transparent pricing, 24/7 support.`;
   return {
@@ -46,13 +49,13 @@ export default async function TourDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const t = getTour(slug);
+  const t = await getTourBySlug(slug);
   if (!t) notFound();
 
-  const dest = t.destinationSlug ? getDestination(t.destinationSlug) : undefined;
-  const vehicle = t.vehicleSlug ? getVehicle(t.vehicleSlug) : undefined;
+  const dest = t.destinationSlug ? await getDestinationBySlug(t.destinationSlug) : undefined;
+  const vehicle = t.vehicleSlug ? await getVehicleBySlug(t.vehicleSlug) : undefined;
   const others = t.destinationSlug
-    ? toursForDestination(t.destinationSlug).filter((x) => x.slug !== t.slug)
+    ? (await getToursForDestination(t.destinationSlug)).filter((x) => x.slug !== t.slug)
     : [];
 
   const crumbs = [

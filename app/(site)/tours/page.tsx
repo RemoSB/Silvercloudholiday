@@ -3,7 +3,9 @@ import PageHero from "@/components/ui/PageHero";
 import TourCard from "@/components/ui/TourCard";
 import CTA from "@/components/home/CTA";
 import Reveal from "@/components/ui/Reveal";
-import { destinations, toursForDestination } from "@/lib/data";
+import { getDestinations, getTours } from "@/sanity/queries";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Tour Packages Across India",
@@ -11,10 +13,17 @@ export const metadata: Metadata = {
     "Chauffeur-driven tour packages across India — Kashmir, Himachal, Uttarakhand, Rajasthan, Kerala, Goa, Mumbai & Gujarat. Day-wise itineraries, transparent pricing, 24/7 support.",
 };
 
-export default function ToursPage() {
+export default async function ToursPage() {
+  const [destinations, allTours] = await Promise.all([
+    getDestinations(),
+    getTours(),
+  ]);
   // Group tours under their destination for an easy-to-scan listing.
   const groups = destinations
-    .map((d) => ({ dest: d, tours: toursForDestination(d.slug!) }))
+    .map((d) => ({
+      dest: d,
+      tours: allTours.filter((t) => t.destinationSlug === d.slug),
+    }))
     .filter((g) => g.tours.length > 0);
 
   return (

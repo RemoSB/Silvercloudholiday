@@ -6,8 +6,11 @@ import EnquireCTA from "@/components/detail/EnquireCTA";
 import JsonLd from "@/components/ui/JsonLd";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
-import { fleet, getVehicle } from "@/lib/data";
+import { getVehicleBySlug, getVehicleSlugs } from "@/sanity/queries";
 import { SITE_URL, COMPANY, waLink } from "@/lib/site";
+
+export const revalidate = 60;
+export const dynamicParams = true;
 
 const CATEGORY_LABEL: Record<string, string> = {
   sedan: "Sedan",
@@ -16,8 +19,8 @@ const CATEGORY_LABEL: Record<string, string> = {
   bus: "Bus & Coach",
 };
 
-export function generateStaticParams() {
-  return fleet.map((v) => ({ slug: v.slug! }));
+export async function generateStaticParams() {
+  return (await getVehicleSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -26,7 +29,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const v = getVehicle(slug);
+  const v = await getVehicleBySlug(slug);
   if (!v) return { title: "Vehicle Not Found" };
   const desc = `Hire the ${v.name} with a professional chauffeur — ${v.tags.join(", ")}. Transparent ${v.price} pricing from ${COMPANY}.`;
   return {
@@ -42,7 +45,7 @@ export default async function VehicleDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const v = getVehicle(slug);
+  const v = await getVehicleBySlug(slug);
   if (!v) notFound();
 
   const crumbs = [

@@ -12,15 +12,18 @@ import JsonLd from "@/components/ui/JsonLd";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
 import {
-  destinations,
-  getDestination,
-  getVehicle,
-  toursForDestination,
-} from "@/lib/data";
+  getDestinationBySlug,
+  getVehicleBySlug,
+  getToursForDestination,
+  getDestinationSlugs,
+} from "@/sanity/queries";
 import { SITE_URL, COMPANY } from "@/lib/site";
 
-export function generateStaticParams() {
-  return destinations.map((d) => ({ slug: d.slug! }));
+export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return (await getDestinationSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -29,7 +32,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const d = getDestination(slug);
+  const d = await getDestinationBySlug(slug);
   if (!d) return { title: "Destination Not Found" };
   return {
     title: `${d.name} Tour Packages by Road`,
@@ -48,13 +51,13 @@ export default async function DestinationDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const d = getDestination(slug);
+  const d = await getDestinationBySlug(slug);
   if (!d) notFound();
 
-  const tours = toursForDestination(d.slug!);
-  const vehicles = (d.vehicleSlugs ?? [])
-    .map((s) => getVehicle(s))
-    .filter((v): v is NonNullable<typeof v> => Boolean(v));
+  const tours = await getToursForDestination(d.slug!);
+  const vehicles = (
+    await Promise.all((d.vehicleSlugs ?? []).map((s) => getVehicleBySlug(s)))
+  ).filter((v): v is NonNullable<typeof v> => Boolean(v));
 
   const crumbs = [
     { label: "Home", href: "/" },
