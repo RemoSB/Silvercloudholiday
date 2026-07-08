@@ -18,7 +18,7 @@ import {
   testimonials,
   services,
 } from "../lib/data";
-import { SETTINGS_DEFAULTS, NAV_DEFAULTS } from "../lib/site";
+import { SETTINGS_DEFAULTS, NAV_DEFAULTS, FOOTER_DEFAULTS } from "../lib/site";
 
 loadEnv({ path: ".env.local" });
 
@@ -242,6 +242,12 @@ async function run() {
           ...l,
         })),
       })),
+    })),
+    footerColumns: FOOTER_DEFAULTS.map((c, ci) => ({
+      _key: `fc${ci}`,
+      _type: "footerColumn",
+      heading: c.heading,
+      links: c.links.map((l, li) => ({ _key: `fl${li}`, _type: "footerLink", ...l })),
     })),
   });
 

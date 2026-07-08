@@ -84,6 +84,34 @@ export const SETTINGS_DEFAULTS: SiteSettings = {
   socials: {},
 };
 
+/* ---------------- Footer link columns (client-managed) ---------------- */
+export type FooterLink = { label: string; href: string };
+export type FooterColumn = { heading: string; links: FooterLink[] };
+
+export const FOOTER_DEFAULTS: FooterColumn[] = [
+  {
+    heading: "Services",
+    links: [
+      { label: "Outstation Tours", href: "/services" },
+      { label: "Airport Transfers", href: "/services" },
+      { label: "Corporate Travel", href: "/services" },
+      { label: "Group Tours", href: "/services" },
+      { label: "Wedding Transport", href: "/services" },
+    ],
+  },
+  {
+    heading: "Destinations",
+    links: [
+      { label: "Himachal Pradesh", href: "/destinations/himachal-pradesh" },
+      { label: "Kashmir", href: "/destinations/kashmir" },
+      { label: "Uttarakhand", href: "/destinations/uttarakhand" },
+      { label: "Rajasthan", href: "/destinations/rajasthan" },
+      { label: "Kerala", href: "/destinations/kerala" },
+      { label: "All Tour Packages", href: "/tours" },
+    ],
+  },
+];
+
 /* ---------------- Navigation (client-managed menus) ---------------- */
 export type NavLink = { icon?: string; title: string; sub?: string; href: string };
 export type NavGroup = { heading?: string; links: NavLink[] };

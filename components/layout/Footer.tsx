@@ -1,19 +1,10 @@
 import Icon from "@/components/ui/Icon";
 import VisitorCount from "./VisitorCount";
-import { getServices } from "@/sanity/queries";
+import { getFooterColumns } from "@/sanity/queries";
 import type { SiteSettings } from "@/lib/site";
 
-const destinations: { label: string; href: string }[] = [
-  { label: "Himachal Pradesh", href: "/destinations/himachal-pradesh" },
-  { label: "Kashmir", href: "/destinations/kashmir" },
-  { label: "Uttarakhand", href: "/destinations/uttarakhand" },
-  { label: "Rajasthan", href: "/destinations/rajasthan" },
-  { label: "Kerala", href: "/destinations/kerala" },
-  { label: "All Tour Packages", href: "/tours" },
-];
-
 export default async function Footer({ settings }: { settings: SiteSettings }) {
-  const services = await getServices();
+  const columns = await getFooterColumns();
   const { phone, phoneTel, whatsappNumber, email, address, socials } = settings;
   const waHref = `https://wa.me/${whatsappNumber}`;
 
@@ -52,31 +43,20 @@ export default async function Footer({ settings }: { settings: SiteSettings }) {
             </div>
           </div>
 
-          <div className="footer-col">
-            <h4>Services</h4>
-            <ul>
-              {services.map((s) => (
-                <li key={s.title}>
-                  <a href="/#services">
-                    <Icon name="arrow" /> {s.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="footer-col">
-            <h4>Destinations</h4>
-            <ul>
-              {destinations.map((d) => (
-                <li key={d.label}>
-                  <a href={d.href}>
-                    <Icon name="mappin" /> {d.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {columns.map((col) => (
+            <div className="footer-col" key={col.heading}>
+              <h4>{col.heading}</h4>
+              <ul>
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <a href={l.href}>
+                      <Icon name="arrow" /> {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           <div className="footer-col">
             <h4>Contact</h4>

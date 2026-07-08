@@ -4,9 +4,11 @@ import { urlFor } from "./image";
 import {
   SETTINGS_DEFAULTS,
   NAV_DEFAULTS,
+  FOOTER_DEFAULTS,
   type SiteSettings,
   type SiteStat,
   type NavMenu,
+  type FooterColumn,
 } from "@/lib/site";
 import {
   fleet as fleetFallback,
@@ -361,6 +363,18 @@ export const getNavigation = cache(async (): Promise<NavMenu[]> => {
     OPTS
   );
   return r?.menus?.length ? r.menus : NAV_DEFAULTS;
+});
+
+export const getFooterColumns = cache(async (): Promise<FooterColumn[]> => {
+  if (!isSanityConfigured) return FOOTER_DEFAULTS;
+  const r = await client.fetch<{ footerColumns?: FooterColumn[] } | null>(
+    `*[_type == "navigation"][0]{
+      footerColumns[]{ heading, links[]{ label, href } }
+    }`,
+    {},
+    OPTS
+  );
+  return r?.footerColumns?.length ? r.footerColumns : FOOTER_DEFAULTS;
 });
 
 export async function getServices(): Promise<Service[]> {

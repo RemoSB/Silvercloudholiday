@@ -74,6 +74,45 @@ export const navigation = defineType({
         },
       ],
     }),
+
+    defineField({
+      name: "footerColumns",
+      title: "Footer link columns",
+      description:
+        "The link columns shown in the site footer (e.g. Services, Destinations). Add, reorder or delete columns and links.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "footerColumn",
+          fields: [
+            defineField({ name: "heading", type: "string", validation: (r) => r.required() }),
+            defineField({
+              name: "links",
+              type: "array",
+              of: [
+                {
+                  type: "object",
+                  name: "footerLink",
+                  fields: [
+                    defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+                    defineField({ name: "href", type: "string", validation: (r) => r.required() }),
+                  ],
+                  preview: { select: { title: "label", subtitle: "href" } },
+                },
+              ],
+            }),
+          ],
+          preview: {
+            select: { title: "heading", links: "links" },
+            prepare: ({ title, links }) => ({
+              title: title || "Column",
+              subtitle: `${links?.length || 0} links`,
+            }),
+          },
+        },
+      ],
+    }),
   ],
   preview: { prepare: () => ({ title: "Navigation Menu" }) },
 });
