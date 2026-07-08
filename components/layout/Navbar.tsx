@@ -2,60 +2,34 @@
 
 import { useEffect, useState } from "react";
 import Icon from "@/components/ui/Icon";
+import { NAV_DEFAULTS, type NavMenu, type NavLink } from "@/lib/site";
 
-type DropItem = { icon: string; title: string; sub: string; href: string };
-
-const fleetItems: DropItem[] = [
-  { icon: "car", title: "Toyota Innova Crysta", sub: "6–7 Seats · Premium SUV", href: "/fleet/toyota-innova-crysta" },
-  { icon: "bus", title: "Force Tempo Traveller", sub: "12–17 Seats · Group Travel", href: "/fleet/force-tempo-traveller" },
-  { icon: "car", title: "Maruti Swift Dzire", sub: "4 Seats · Budget Sedan", href: "/fleet/maruti-swift-dzire" },
-  { icon: "car", title: "Honda Amaze", sub: "4 Seats · Highway Sedan", href: "/fleet/honda-amaze" },
-  { icon: "car", title: "Maruti Ertiga", sub: "6–7 Seats · Family MUV", href: "/fleet/maruti-suzuki-ertiga" },
-  { icon: "bus", title: "Buses & Coaches", sub: "20+ Seats · Custom Hire", href: "/fleet" },
-];
-
-const destHills: DropItem[] = [
-  { icon: "mountain", title: "Himachal Pradesh", sub: "Manali · Spiti · Dharamshala", href: "/destinations/himachal-pradesh" },
-  { icon: "mountain", title: "Kashmir", sub: "Dal Lake · Gulmarg · Pahalgam", href: "/destinations/kashmir" },
-  { icon: "mountain", title: "Uttarakhand", sub: "Rishikesh · Haridwar · Kedarnath", href: "/destinations/uttarakhand" },
-  { icon: "mappin", title: "Rajasthan", sub: "Jaipur · Udaipur · Jodhpur", href: "/destinations/rajasthan" },
-];
-const destCoast: DropItem[] = [
-  { icon: "mappin", title: "Kerala", sub: "Munnar · Alleppey · Wayanad", href: "/destinations/kerala" },
-  { icon: "mappin", title: "Goa", sub: "North Goa · South Goa", href: "/destinations/goa" },
-  { icon: "mappin", title: "Mumbai", sub: "City Tours · Airport Transfers", href: "/destinations/mumbai" },
-  { icon: "mappin", title: "Gujarat", sub: "Rann of Kutch · Somnath · Dwarka", href: "/destinations/gujarat" },
-];
-
-const serviceItems: DropItem[] = [
-  { icon: "road", title: "Outstation Tours", sub: "Multi-day journeys across India", href: "/services" },
-  { icon: "nav", title: "Airport Transfers", sub: "On-time pickup & drop", href: "/services" },
-  { icon: "briefcase", title: "Corporate Travel", sub: "Employee & executive transport", href: "/services" },
-  { icon: "users", title: "Group Tours", sub: "Family & friends · 12+ pax", href: "/services" },
-  { icon: "sparkle", title: "Wedding Transport", sub: "Decorated cars & fleets", href: "/services" },
-];
-
-function DropdownItem({ item, href }: { item: DropItem; href?: string }) {
+function DropdownItem({ link }: { link: NavLink }) {
   return (
-    <a href={href ?? item.href} className="dropdown-item">
+    <a href={link.href} className="dropdown-item">
       <div className="di-icon">
-        <Icon name={item.icon} />
+        <Icon name={link.icon || "arrow"} />
       </div>
       <div className="di-text">
-        <strong>{item.title}</strong>
-        <span>{item.sub}</span>
+        <strong>{link.title}</strong>
+        {link.sub && <span>{link.sub}</span>}
       </div>
     </a>
   );
 }
 
-const PHONE = "+91 98765 43210";
-const PHONE_TEL = "+919876543210";
-
-export default function Navbar() {
+export default function Navbar({
+  menus = NAV_DEFAULTS,
+  phone = "+91 98765 43210",
+  phoneTel = "+919876543210",
+}: {
+  menus?: NavMenu[];
+  phone?: string;
+  phoneTel?: string;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
-  const [openDrop, setOpenDrop] = useState<string | null>(null);
+  const [openDrop, setOpenDrop] = useState<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -93,7 +67,7 @@ export default function Navbar() {
     typeof window !== "undefined" &&
     window.matchMedia("(max-width: 768px)").matches;
 
-  const handleDropClick = (key: string) => (e: React.MouseEvent) => {
+  const handleDropClick = (key: number) => (e: React.MouseEvent) => {
     if (isMobile()) {
       e.preventDefault();
       setOpenDrop((cur) => (cur === key ? null : key));
@@ -107,10 +81,7 @@ export default function Navbar() {
     }
   };
 
-  const navClass = [
-    scrolled && "scrolled",
-    navOpen && "nav-open",
-  ]
+  const navClass = [scrolled && "scrolled", navOpen && "nav-open"]
     .filter(Boolean)
     .join(" ");
 
@@ -127,90 +98,73 @@ export default function Navbar() {
         </a>
 
         <ul className="nav-links">
-          <li className={`has-dropdown${openDrop === "fleet" ? " open" : ""}`}>
-            <a href="/fleet" onClick={handleDropClick("fleet")}>
-              Fleet <Icon name="chevron" className="caret" />
-            </a>
-            <div className="dropdown">
-              {fleetItems.map((it) => (
-                <DropdownItem key={it.title} item={it} />
-              ))}
-              <a href="/fleet" className="dropdown-footer">
-                <div className="dropdown-footer-text">
-                  <strong>View Full Fleet</strong>
-                  <span>5 Vehicle Types</span>
+          {menus.map((m, i) => {
+            const hasDropdown = !!m.groups?.length;
+            if (!hasDropdown) {
+              return (
+                <li key={m.label}>
+                  <a href={m.href} onClick={closeMobile}>
+                    {m.label}
+                  </a>
+                </li>
+              );
+            }
+            return (
+              <li
+                key={m.label}
+                className={`has-dropdown${openDrop === i ? " open" : ""}`}
+              >
+                <a href={m.href} onClick={handleDropClick(i)}>
+                  {m.label} <Icon name="chevron" className="caret" />
+                </a>
+                <div className={`dropdown${m.mega ? " mega" : ""}`}>
+                  {m.mega ? (
+                    <div className="mega-grid">
+                      {m.groups!.map((g, gi) => (
+                        <div key={gi} style={{ display: "contents" }}>
+                          {g.heading && (
+                            <div
+                              className="mega-label"
+                              style={gi > 0 ? { marginTop: ".4rem" } : undefined}
+                            >
+                              {g.heading}
+                            </div>
+                          )}
+                          {g.links.map((l) => (
+                            <DropdownItem key={l.title} link={l} />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    m.groups!.map((g, gi) => (
+                      <div key={gi} style={{ display: "contents" }}>
+                        {g.heading && <div className="mega-label">{g.heading}</div>}
+                        {g.links.map((l) => (
+                          <DropdownItem key={l.title} link={l} />
+                        ))}
+                      </div>
+                    ))
+                  )}
+                  {m.footerTitle && (
+                    <a href={m.footerHref || m.href} className="dropdown-footer">
+                      <div className="dropdown-footer-text">
+                        <strong>{m.footerTitle}</strong>
+                        {m.footerSub && <span>{m.footerSub}</span>}
+                      </div>
+                      <Icon name="arrow" />
+                    </a>
+                  )}
                 </div>
-                <Icon name="arrow" />
-              </a>
-            </div>
-          </li>
-
-          <li className={`has-dropdown${openDrop === "dest" ? " open" : ""}`}>
-            <a href="/destinations" onClick={handleDropClick("dest")}>
-              Destinations <Icon name="chevron" className="caret" />
-            </a>
-            <div className="dropdown mega">
-              <div className="mega-grid">
-                <div className="mega-label">Hill Stations &amp; Pilgrimage</div>
-                {destHills.map((it) => (
-                  <DropdownItem key={it.title} item={it} />
-                ))}
-                <div className="mega-label" style={{ marginTop: ".4rem" }}>
-                  Beaches, Heritage &amp; City
-                </div>
-                {destCoast.map((it) => (
-                  <DropdownItem key={it.title} item={it} />
-                ))}
-              </div>
-              <a href="/destinations" className="dropdown-footer">
-                <div className="dropdown-footer-text">
-                  <strong>Explore All Destinations</strong>
-                  <span>8 States · 30+ Cities</span>
-                </div>
-                <Icon name="arrow" />
-              </a>
-            </div>
-          </li>
-
-          <li className={`has-dropdown${openDrop === "svc" ? " open" : ""}`}>
-            <a href="/services" onClick={handleDropClick("svc")}>
-              Services <Icon name="chevron" className="caret" />
-            </a>
-            <div className="dropdown">
-              {serviceItems.map((it) => (
-                <DropdownItem key={it.title} item={it} />
-              ))}
-              <a href="/contact" className="dropdown-footer">
-                <div className="dropdown-footer-text">
-                  <strong>Get Custom Quote</strong>
-                  <span>Tailored to your trip</span>
-                </div>
-                <Icon name="arrow" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <a href="/tours" onClick={closeMobile}>
-              Tours
-            </a>
-          </li>
-          <li>
-            <a href="/about" onClick={closeMobile}>
-              About
-            </a>
-          </li>
-          <li>
-            <a href="/contact" onClick={closeMobile}>
-              Contact
-            </a>
-          </li>
+              </li>
+            );
+          })}
 
           {/* Mobile-only cloned actions (desktop hides via CSS) */}
           <li className="nav-mobile-actions">
-            <a className="nav-phone" href={`tel:${PHONE_TEL}`}>
+            <a className="nav-phone" href={`tel:${phoneTel}`}>
               <Icon name="phone" sm />
-              {PHONE}
+              {phone}
             </a>
             <a className="btn-primary" href="/contact" onClick={closeMobile}>
               Book Now
@@ -220,9 +174,9 @@ export default function Navbar() {
         </ul>
 
         <div className="nav-cta">
-          <a className="nav-phone" href={`tel:${PHONE_TEL}`}>
+          <a className="nav-phone" href={`tel:${phoneTel}`}>
             <Icon name="phone" sm />
-            {PHONE}
+            {phone}
           </a>
           <a className="btn-primary" href="/contact">
             Book Now

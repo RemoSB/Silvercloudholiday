@@ -6,7 +6,7 @@ import EnquireCTA from "@/components/detail/EnquireCTA";
 import JsonLd from "@/components/ui/JsonLd";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
-import { getVehicleBySlug, getVehicleSlugs } from "@/sanity/queries";
+import { getVehicleBySlug, getVehicleSlugs, getSettings } from "@/sanity/queries";
 import { SITE_URL, COMPANY, waLink } from "@/lib/site";
 
 export const revalidate = 60;
@@ -47,6 +47,7 @@ export default async function VehicleDetailPage({
   const { slug } = await params;
   const v = await getVehicleBySlug(slug);
   if (!v) notFound();
+  const settings = await getSettings();
 
   const crumbs = [
     { label: "Home", href: "/" },
@@ -154,7 +155,7 @@ export default async function VehicleDetailPage({
               <div className="price-actions">
                 <a
                   className="btn-whatsapp"
-                  href={waLink(`Hi, I'd like to book the ${v.name}.`)}
+                  href={waLink(`Hi, I'd like to book the ${v.name}.`, settings.whatsappNumber)}
                   target="_blank"
                   rel="noopener"
                 >

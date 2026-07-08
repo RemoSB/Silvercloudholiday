@@ -17,6 +17,7 @@ import {
   getVehicleBySlug,
   getToursForDestination,
   getTourSlugs,
+  getSettings,
 } from "@/sanity/queries";
 import { SITE_URL, COMPANY, waLink } from "@/lib/site";
 
@@ -51,6 +52,7 @@ export default async function TourDetailPage({
   const { slug } = await params;
   const t = await getTourBySlug(slug);
   if (!t) notFound();
+  const settings = await getSettings();
 
   const dest = t.destinationSlug ? await getDestinationBySlug(t.destinationSlug) : undefined;
   const vehicle = t.vehicleSlug ? await getVehicleBySlug(t.vehicleSlug) : undefined;
@@ -165,7 +167,7 @@ export default async function TourDetailPage({
               <div className="price-actions">
                 <a
                   className="btn-whatsapp"
-                  href={waLink(`Hi, I'd like to book the ${t.name} (${t.duration}) package.`)}
+                  href={waLink(`Hi, I'd like to book the ${t.name} (${t.duration}) package.`, settings.whatsappNumber)}
                   target="_blank"
                   rel="noopener"
                 >

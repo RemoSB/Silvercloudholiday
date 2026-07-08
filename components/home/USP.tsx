@@ -1,8 +1,9 @@
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
-import { uspItems } from "@/lib/data";
+import { getSettings } from "@/sanity/queries";
 
-export default function USP() {
+export default async function USP() {
+  const { usps: uspItems } = await getSettings();
   return (
     <section id="usp">
       <div className="container">

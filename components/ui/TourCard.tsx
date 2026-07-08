@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
-import { WHATSAPP_NUMBER } from "@/lib/site";
+import { getSettings } from "@/sanity/queries";
 import type { Tour } from "@/lib/data";
 
-export default function TourCard({ tour, delay = 0 }: { tour: Tour; delay?: number }) {
+export default async function TourCard({ tour, delay = 0 }: { tour: Tour; delay?: number }) {
+  const { whatsappNumber } = await getSettings();
   const href = tour.slug ? `/tours/${tour.slug}` : "#cta";
   return (
     <Reveal as="div" className="pkg-card" delay={delay}>
@@ -45,7 +46,7 @@ export default function TourCard({ tour, delay = 0 }: { tour: Tour; delay?: numb
           </Link>
           <a
             className="pkg-btn pkg-wa"
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
               `Hi, I'm interested in the ${tour.name} package.`
             )}`}
             target="_blank"

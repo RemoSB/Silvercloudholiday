@@ -83,10 +83,14 @@ export function buildSummary(data: InquiryData): SummaryRow[] {
   return rows;
 }
 
-export function waLink(data: InquiryData, ref: string): string {
+export function waLink(
+  data: InquiryData,
+  ref: string,
+  number: string = WHATSAPP_NUMBER
+): string {
   const lines = ["*New Inquiry — Silver Clouds Holiday*", "Ref: " + ref, ""];
   buildSummary(data).forEach(([k, v]) => lines.push("• " + k + ": " + v));
-  return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
+  return "https://wa.me/" + number + "?text=" + encodeURIComponent(lines.join("\n"));
 }
 
 export function saveInquiry(data: InquiryData, ref: string): void {

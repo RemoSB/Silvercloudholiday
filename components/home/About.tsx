@@ -1,20 +1,23 @@
 import Icon from "@/components/ui/Icon";
+import { getSettings } from "@/sanity/queries";
 
-export default function About() {
+export default async function About() {
+  const { about } = await getSettings();
+
   return (
     <section id="about">
       <div className="container">
         <div className="about-grid">
           <div className="owner-frame">
             <div className="owner-years">
-              <strong>15+</strong>
+              <strong>{about.yearsBadge}</strong>
               <span>Years</span>
             </div>
             <div className="owner-portrait">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/akshoy.webp"
-                alt="Akshoy — Founder, Silver Clouds Holiday"
+                src={about.portrait || "/images/akshoy.webp"}
+                alt={`${about.founderName} — Founder, Silver Clouds Holiday`}
                 loading="lazy"
               />
             </div>
@@ -23,8 +26,8 @@ export default function About() {
                 <Icon name="award" />
               </div>
               <div>
-                <strong>Akshoy</strong>
-                <span>Founder &amp; CEO</span>
+                <strong>{about.founderName}</strong>
+                <span>{about.founderRole}</span>
               </div>
             </div>
           </div>
@@ -34,30 +37,16 @@ export default function About() {
             <h2 className="section-title">
               Built on Trust, Driven by <em>Passion for India</em>
             </h2>
-            <div className="about-quote">
-              &quot;Every journey we plan, I plan it like it&apos;s for my own
-              family — that&apos;s the Silver Clouds Holiday promise.&quot;
-            </div>
-            <p>
-              What started as a single Innova Crysta and one chauffeur in 2018
-              has grown into a fleet of 50+ premium vehicles serving travellers
-              across 8 Indian states. We&apos;re a family-run business that
-              treats every customer like a guest in our home.
-            </p>
+            <div className="about-quote">&quot;{about.quote}&quot;</div>
+            <p>{about.story}</p>
 
             <div className="about-stats">
-              <div className="about-stat">
-                <strong>50+</strong>
-                <span>Vehicles</span>
-              </div>
-              <div className="about-stat">
-                <strong>10K+</strong>
-                <span>Trips Done</span>
-              </div>
-              <div className="about-stat">
-                <strong>4.9★</strong>
-                <span>Rating</span>
-              </div>
+              {about.stats.map((s) => (
+                <div className="about-stat" key={s.label}>
+                  <strong>{s.value}</strong>
+                  <span>{s.label}</span>
+                </div>
+              ))}
             </div>
 
             <div className="about-actions">

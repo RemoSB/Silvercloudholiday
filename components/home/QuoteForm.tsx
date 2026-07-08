@@ -32,7 +32,15 @@ const VEHICLE_OPTS = [
 
 type ModalState = { ref: string; rows: SummaryRow[]; wa: string } | null;
 
-export default function QuoteForm() {
+export default function QuoteForm({
+  phoneTel = "+919876543210",
+  phone = "+91 98765 43210",
+  whatsappNumber = "919876543210",
+}: {
+  phoneTel?: string;
+  phone?: string;
+  whatsappNumber?: string;
+}) {
   const [activeTab, setActiveTab] = useState("oneway");
   const [submitLabel, setSubmitLabel] = useState("Check Availability & Price");
   const [modal, setModal] = useState<ModalState>(null);
@@ -195,7 +203,7 @@ export default function QuoteForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ref, data }),
       }).catch(() => {});
-      setModal({ ref, rows: buildSummary(data), wa: waLink(data, ref) });
+      setModal({ ref, rows: buildSummary(data), wa: waLink(data, ref, whatsappNumber) });
       if (btn) {
         btn.classList.remove("loading");
         if (original) btn.innerHTML = original;
@@ -643,8 +651,8 @@ export default function QuoteForm() {
             >
               <Icon name="whatsapp" /> Send via WhatsApp
             </a>
-            <a className="btn btn-call" href="tel:+919876543210">
-              <Icon name="phone" /> Call +91 98765 43210
+            <a className="btn btn-call" href={`tel:${phoneTel}`}>
+              <Icon name="phone" /> Call {phone}
             </a>
             <p className="modal-note">
               Save reference ID for follow-ups · Free cancellation up to 1 hr

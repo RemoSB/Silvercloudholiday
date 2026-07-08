@@ -1,7 +1,10 @@
 import Icon from "@/components/ui/Icon";
 import QuoteForm from "./QuoteForm";
+import { getSettings } from "@/sanity/queries";
 
-export default function Hero() {
+export default async function Hero() {
+  const settings = await getSettings();
+
   return (
     <section id="hero">
       <div className="hero-bg"></div>
@@ -13,14 +16,8 @@ export default function Hero() {
               <Icon name="sparkle" sm filled />
               Trusted by 10,000+ Travellers
             </div>
-            <h1 className="hero-title">
-              Explore India with <em>Premium Chauffeur</em> Services
-            </h1>
-            <p className="hero-desc">
-              From the snow-peaks of Himachal to the beaches of Goa — travel in
-              comfort, safety and style with our expert drivers and
-              well-maintained fleet.
-            </p>
+            <h1 className="hero-title">{settings.heroHeading}</h1>
+            <p className="hero-desc">{settings.heroSubheading}</p>
             <div className="hero-buttons">
               <a className="btn-primary" href="#fleet">
                 View Our Fleet
@@ -32,21 +29,19 @@ export default function Hero() {
               </a>
             </div>
             <div className="hero-stats">
-              <div className="hero-stat">
-                <strong>10K+</strong>
-                <span>Happy Travellers</span>
-              </div>
-              <div className="hero-stat">
-                <strong>8</strong>
-                <span>States Covered</span>
-              </div>
-              <div className="hero-stat">
-                <strong>5</strong>
-                <span>Vehicle Types</span>
-              </div>
+              {settings.stats.map((s) => (
+                <div className="hero-stat" key={s.label}>
+                  <strong>{s.value}</strong>
+                  <span>{s.label}</span>
+                </div>
+              ))}
             </div>
           </div>
-          <QuoteForm />
+          <QuoteForm
+            phoneTel={settings.phoneTel}
+            phone={settings.phone}
+            whatsappNumber={settings.whatsappNumber}
+          />
         </div>
       </div>
     </section>

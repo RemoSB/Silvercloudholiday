@@ -18,6 +18,7 @@ import {
   testimonials,
   services,
 } from "../lib/data";
+import { SETTINGS_DEFAULTS, NAV_DEFAULTS } from "../lib/site";
 
 loadEnv({ path: ".env.local" });
 
@@ -194,22 +195,54 @@ async function run() {
     });
   }
 
+  const d = SETTINGS_DEFAULTS;
   docs.push({
     _id: "siteSettings",
     _type: "siteSettings",
-    phone: "+91 98765 43210",
-    phoneTel: "+919876543210",
-    whatsappNumber: "919876543210",
-    email: "info@silvercloudsholiday.in",
-    address: "Connaught Place, New Delhi",
-    heroHeading: "Explore India with Premium Chauffeur Services",
-    heroSubheading:
-      "From the snow-peaks of Himachal to the beaches of Goa — travel in comfort, safety and style.",
-    stats: [
-      { _key: "a", value: "10K+", label: "Happy Travellers" },
-      { _key: "b", value: "8", label: "States Covered" },
-      { _key: "c", value: "5", label: "Vehicle Types" },
-    ],
+    phone: d.phone,
+    phoneTel: d.phoneTel,
+    whatsappNumber: d.whatsappNumber,
+    email: d.email,
+    address: d.address,
+    heroHeading: d.heroHeading,
+    heroSubheading: d.heroSubheading,
+    stats: keyed(d.stats),
+    about: {
+      founderName: d.about.founderName,
+      founderRole: d.about.founderRole,
+      yearsBadge: d.about.yearsBadge,
+      quote: d.about.quote,
+      story: d.about.story,
+      stats: keyed(d.about.stats),
+    },
+    usps: keyed(d.usps),
+    whyItems: keyed(d.whyItems),
+  });
+
+  // Navigation menu (client-editable). Nested arrays each need _key.
+  docs.push({
+    _id: "navigation",
+    _type: "navigation",
+    menus: NAV_DEFAULTS.map((m, i) => ({
+      _key: `m${i}`,
+      _type: "menuItem",
+      label: m.label,
+      href: m.href,
+      mega: m.mega || false,
+      footerTitle: m.footerTitle,
+      footerSub: m.footerSub,
+      footerHref: m.footerHref,
+      groups: (m.groups || []).map((g, gi) => ({
+        _key: `g${gi}`,
+        _type: "navGroup",
+        heading: g.heading,
+        links: g.links.map((l, li) => ({
+          _key: `l${li}`,
+          _type: "navLink",
+          ...l,
+        })),
+      })),
+    })),
   });
 
   console.log(`Writing ${docs.length} documents…`);

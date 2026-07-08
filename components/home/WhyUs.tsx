@@ -1,8 +1,9 @@
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
-import { whyItems } from "@/lib/data";
+import { getSettings } from "@/sanity/queries";
 
-export default function WhyUs() {
+export default async function WhyUs() {
+  const { whyItems } = await getSettings();
   return (
     <section id="why">
       <div className="container">

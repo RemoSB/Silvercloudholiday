@@ -1,13 +1,7 @@
 import Icon from "@/components/ui/Icon";
 import VisitorCount from "./VisitorCount";
-
-const services = [
-  "Outstation Tours",
-  "Airport Transfers",
-  "Corporate Travel",
-  "Group Tours",
-  "Wedding Transport",
-];
+import { getServices } from "@/sanity/queries";
+import type { SiteSettings } from "@/lib/site";
 
 const destinations: { label: string; href: string }[] = [
   { label: "Himachal Pradesh", href: "/destinations/himachal-pradesh" },
@@ -18,7 +12,11 @@ const destinations: { label: string; href: string }[] = [
   { label: "All Tour Packages", href: "/tours" },
 ];
 
-export default function Footer() {
+export default async function Footer({ settings }: { settings: SiteSettings }) {
+  const services = await getServices();
+  const { phone, phoneTel, whatsappNumber, email, address, socials } = settings;
+  const waHref = `https://wa.me/${whatsappNumber}`;
+
   return (
     <footer>
       <div className="container">
@@ -29,20 +27,26 @@ export default function Footer() {
             <strong>Silver Clouds Holiday</strong>
             <p>
               Holiday tour packages &amp; premium chauffeur-driven travel across
-              India. Based in Connaught Place, New Delhi — trusted by thousands
-              of families, corporates and solo travellers.
+              India. Based in {address} — trusted by thousands of families,
+              corporates and solo travellers.
             </p>
             <div className="social-links">
-              <a href="#" title="Instagram">
-                <Icon name="instagram" />
-              </a>
-              <a href="#" title="Facebook">
-                <Icon name="facebook" />
-              </a>
-              <a href="#" title="YouTube">
-                <Icon name="youtube" />
-              </a>
-              <a href="#" title="WhatsApp">
+              {socials.instagram && (
+                <a href={socials.instagram} target="_blank" rel="noopener" title="Instagram">
+                  <Icon name="instagram" />
+                </a>
+              )}
+              {socials.facebook && (
+                <a href={socials.facebook} target="_blank" rel="noopener" title="Facebook">
+                  <Icon name="facebook" />
+                </a>
+              )}
+              {socials.youtube && (
+                <a href={socials.youtube} target="_blank" rel="noopener" title="YouTube">
+                  <Icon name="youtube" />
+                </a>
+              )}
+              <a href={waHref} target="_blank" rel="noopener" title="WhatsApp">
                 <Icon name="whatsapp" filled />
               </a>
             </div>
@@ -52,9 +56,9 @@ export default function Footer() {
             <h4>Services</h4>
             <ul>
               {services.map((s) => (
-                <li key={s}>
+                <li key={s.title}>
                   <a href="/#services">
-                    <Icon name="arrow" /> {s}
+                    <Icon name="arrow" /> {s.title}
                   </a>
                 </li>
               ))}
@@ -78,23 +82,23 @@ export default function Footer() {
             <h4>Contact</h4>
             <ul>
               <li>
-                <a href="tel:+919876543210">
-                  <Icon name="phone" /> +91 98765 43210
+                <a href={`tel:${phoneTel}`}>
+                  <Icon name="phone" /> {phone}
                 </a>
               </li>
               <li>
-                <a href="mailto:info@silvercloudsholiday.in">
-                  <Icon name="mail" /> info@silvercloudsholiday.in
+                <a href={`mailto:${email}`}>
+                  <Icon name="mail" /> {email}
                 </a>
               </li>
               <li>
-                <a href="https://wa.me/919876543210" target="_blank" rel="noopener">
+                <a href={waHref} target="_blank" rel="noopener">
                   <Icon name="whatsapp" filled /> WhatsApp Chat
                 </a>
               </li>
               <li>
                 <a href="#">
-                  <Icon name="mappin" /> Connaught Place, New Delhi
+                  <Icon name="mappin" /> {address}
                 </a>
               </li>
             </ul>

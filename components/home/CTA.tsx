@@ -1,6 +1,9 @@
 import Icon from "@/components/ui/Icon";
+import { getSettings } from "@/sanity/queries";
 
-export default function CTA() {
+export default async function CTA() {
+  const { phoneTel, whatsappNumber } = await getSettings();
+
   return (
     <section id="cta">
       <div className="container">
@@ -15,14 +18,14 @@ export default function CTA() {
           <div className="cta-buttons">
             <a
               className="btn-whatsapp"
-              href="https://wa.me/919876543210"
+              href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noopener"
             >
               <Icon name="whatsapp" filled style={{ width: 18, height: 18 }} />
               WhatsApp Us
             </a>
-            <a className="btn-primary" href="tel:+919876543210">
+            <a className="btn-primary" href={`tel:${phoneTel}`}>
               <Icon name="phone" sm />
               Call Now
             </a>

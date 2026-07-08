@@ -1,11 +1,20 @@
+import { cache } from "react";
 import { client, isSanityConfigured } from "./client";
 import { urlFor } from "./image";
+import {
+  SETTINGS_DEFAULTS,
+  NAV_DEFAULTS,
+  type SiteSettings,
+  type SiteStat,
+  type NavMenu,
+} from "@/lib/site";
 import {
   fleet as fleetFallback,
   destinations as destFallback,
   packages as pkgFallback,
   tours as toursFallback,
   testimonials as testiFallback,
+  services as servicesFallback,
   getTour,
   getVehicle,
   getDestination,
@@ -15,6 +24,7 @@ import {
   type Package,
   type Tour,
   type Testimonial,
+  type Service,
 } from "@/lib/data";
 
 // Revalidate CMS reads every 60s (ISR) once Sanity is live.
@@ -279,6 +289,93 @@ export async function getToursForDestination(destSlug: string): Promise<Tour[]> 
     if (rows?.length) return rows.map(mapTour);
   }
   return toursForDestination(destSlug);
+}
+
+/* ------------------------------------------------------------------ */
+/* Site settings (singleton) + services — CMS or fallback              */
+/* ------------------------------------------------------------------ */
+
+// Cached per request: many server components call getSettings(); React
+// cache() dedupes them into a single Sanity fetch.
+export const getSettings = cache(async (): Promise<SiteSettings> => {
+  if (!isSanityConfigured) return SETTINGS_DEFAULTS;
+  const r = await client.fetch<Record<string, unknown> | null>(
+    `*[_type == "siteSettings"][0]{
+      phone, phoneTel, whatsappNumber, email, address,
+      heroHeading, heroSubheading, stats,
+      about, usps, whyItems, socials
+    }`,
+    {},
+    OPTS
+  );
+  if (!r) return SETTINGS_DEFAULTS;
+  const d = SETTINGS_DEFAULTS;
+  const socials = (r.socials as SiteSettings["socials"]) || {};
+  const stats = r.stats as SiteSettings["stats"] | undefined;
+  const usps = r.usps as SiteSettings["usps"] | undefined;
+  const whyItems = r.whyItems as SiteSettings["whyItems"] | undefined;
+  const a = (r.about as Record<string, unknown> | undefined) || undefined;
+  const about: SiteSettings["about"] = a
+    ? {
+        founderName: (a.founderName as string) || d.about.founderName,
+        founderRole: (a.founderRole as string) || d.about.founderRole,
+        yearsBadge: (a.yearsBadge as string) || d.about.yearsBadge,
+        portrait: img(a.portrait as SanityImg, d.about.portrait || "", 800) || d.about.portrait,
+        quote: (a.quote as string) || d.about.quote,
+        story: (a.story as string) || d.about.story,
+        stats: (a.stats as SiteStat[] | undefined)?.length
+          ? (a.stats as SiteStat[])
+          : d.about.stats,
+      }
+    : d.about;
+  return {
+    phone: (r.phone as string) || d.phone,
+    phoneTel: (r.phoneTel as string) || d.phoneTel,
+    whatsappNumber: (r.whatsappNumber as string) || d.whatsappNumber,
+    email: (r.email as string) || d.email,
+    address: (r.address as string) || d.address,
+    heroHeading: (r.heroHeading as string) || d.heroHeading,
+    heroSubheading: (r.heroSubheading as string) || d.heroSubheading,
+    stats: stats?.length ? stats : d.stats,
+    about,
+    usps: usps?.length ? usps : d.usps,
+    whyItems: whyItems?.length ? whyItems : d.whyItems,
+    socials: {
+      instagram: socials.instagram || undefined,
+      facebook: socials.facebook || undefined,
+      youtube: socials.youtube || undefined,
+    },
+  };
+});
+
+export const getNavigation = cache(async (): Promise<NavMenu[]> => {
+  if (!isSanityConfigured) return NAV_DEFAULTS;
+  const r = await client.fetch<{ menus?: NavMenu[] } | null>(
+    `*[_type == "navigation"][0]{
+      menus[]{
+        label, href, mega, footerTitle, footerSub, footerHref,
+        groups[]{ heading, links[]{ icon, title, sub, href } }
+      }
+    }`,
+    {},
+    OPTS
+  );
+  return r?.menus?.length ? r.menus : NAV_DEFAULTS;
+});
+
+export async function getServices(): Promise<Service[]> {
+  if (!isSanityConfigured) return servicesFallback;
+  const rows = await client.fetch<Record<string, unknown>[]>(
+    `*[_type == "service"] | order(order asc){ title, icon, description }`,
+    {},
+    OPTS
+  );
+  if (!rows?.length) return servicesFallback;
+  return rows.map((r) => ({
+    title: r.title as string,
+    icon: (r.icon as string) || "sparkle",
+    description: (r.description as string) || "",
+  }));
 }
 
 // All tours (for /tours listing), CMS or fallback.

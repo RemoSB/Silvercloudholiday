@@ -1,8 +1,9 @@
 import Icon from "@/components/ui/Icon";
 import Reveal from "@/components/ui/Reveal";
-import { services } from "@/lib/data";
+import { getServices } from "@/sanity/queries";
 
-export default function Services({ heading = true }: { heading?: boolean }) {
+export default async function Services({ heading = true }: { heading?: boolean }) {
+  const services = await getServices();
   return (
     <section id="services" className="services-section">
       <div className="container">

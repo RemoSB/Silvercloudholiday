@@ -1,14 +1,16 @@
 import Icon from "@/components/ui/Icon";
 import QuoteForm from "@/components/home/QuoteForm";
-import { waLink, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site";
+import { waLink } from "@/lib/site";
+import { getSettings } from "@/sanity/queries";
 
-export default function EnquireCTA({
+export default async function EnquireCTA({
   title = "Plan This Trip with Us",
   subject,
 }: {
   title?: string;
   subject: string;
 }) {
+  const { phone, phoneTel, whatsappNumber } = await getSettings();
   return (
     <section id="enquire" className="enquire-cta">
       <div className="container enquire-grid">
@@ -37,20 +39,24 @@ export default function EnquireCTA({
           <div className="enquire-actions">
             <a
               className="btn-whatsapp"
-              href={waLink(`Hi, I'd like a quote for: ${subject}`)}
+              href={waLink(`Hi, I'd like a quote for: ${subject}`, whatsappNumber)}
               target="_blank"
               rel="noopener"
             >
               <Icon name="whatsapp" filled style={{ width: 18, height: 18 }} />
               WhatsApp Us
             </a>
-            <a className="btn-outline" href={`tel:${PHONE_TEL}`}>
-              <Icon name="phone" sm /> {PHONE_DISPLAY}
+            <a className="btn-outline" href={`tel:${phoneTel}`}>
+              <Icon name="phone" sm /> {phone}
             </a>
           </div>
         </div>
         <div className="enquire-form">
-          <QuoteForm />
+          <QuoteForm
+            phoneTel={phoneTel}
+            phone={phone}
+            whatsappNumber={whatsappNumber}
+          />
         </div>
       </div>
     </section>
